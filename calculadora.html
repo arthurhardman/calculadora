@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fotus - Calculadora de Juros Compostos</title>
+  <link rel="icon" type="image/png" href="image.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet"/>
+  <!-- seu estilo aqui -->
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Montserrat', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #f4f4f4;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      margin-bottom: 30px;
+    }
+
+    header img {
+      max-width: 200px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: 28px;
+      color: rgb(32, 75, 98);
+      text-align: center;
+    }
+
+    .typing {
+      border-right: .12em solid rgb(32, 75, 98);
+      white-space: nowrap;
+      overflow: hidden;
+      animation: typing 3s steps(30, end), blink .75s step-end infinite;
+    }
+
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+
+    @keyframes blink {
+      50% { border-color: transparent }
+    }
+
+    .container {
+      background-color: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 500px;
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 5px;
+      font-weight: 600;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+      transition: 0.3s;
+      font-size: 16px;
+    }
+
+    input:focus {
+      border-color: rgb(32, 75, 98);
+      box-shadow: 0 0 4px rgba(32, 75, 98, 0.6);
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 25px;
+      padding: 14px;
+      font-size: 16px;
+      background-color: rgb(32, 75, 98);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: rgb(22, 55, 70);
+    }
+
+    .resultado {
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: bold;
+      color: rgb(32, 75, 98);
+      text-align: center;
+    }
+
+    .error {
+      color: red;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="image.png" alt="Logo Fotus Distribuidora Solar">
+    <h1 class="typing">Calculadora de Juros Compostos</h1>
+  </header>
+
+  <div class="container">
+    <label for="valorInicial">Valor da Venda (R$):</label>
+    <input type="number" id="valorInicial" placeholder="Ex: 1000" required>
+    <div id="erroValor" class="error"></div>
+
+    <label for="juros">Taxa de Juros (% ao mês):</label>
+    <input type="number" id="juros" placeholder="Ex: 2.5" step="0.01" required>
+    <div id="erroJuros" class="error"></div>
+
+    <label for="vezes">Quantidade de Vezes:</label>
+    <input type="number" id="vezes" placeholder="Ex: 12" required>
+    <div id="erroVezes" class="error"></div>
+
+    <button onclick="calcular()">Calcular</button>
+    <div class="resultado" id="resultado"></div>
+  </div>
+
+  <script>
+    function calcular() {
+      // Limpar mensagens anteriores
+      document.getElementById("erroValor").textContent = "";
+      document.getElementById("erroJuros").textContent = "";
+      document.getElementById("erroVezes").textContent = "";
+      document.getElementById("resultado").textContent = "";
+
+      const valor = parseFloat(document.getElementById("valorInicial").value);
+      const juros = parseFloat(document.getElementById("juros").value);
+      const vezes = parseInt(document.getElementById("vezes").value);
+
+      let valido = true;
+
+      if (isNaN(valor) || valor <= 0) {
+        document.getElementById("erroValor").textContent = "Informe um valor válido.";
+        valido = false;
+      }
+
+      if (isNaN(juros) || juros < 0) {
+        document.getElementById("erroJuros").textContent = "Informe uma taxa de juros válida.";
+        valido = false;
+      }
+
+      if (isNaN(vezes) || vezes <= 0) {
+        document.getElementById("erroVezes").textContent = "Informe uma quantidade válida de vezes.";
+        valido = false;
+      }
+
+      if (!valido) return;
+
+      const taxa = juros / 100;
+      const montante = valor * Math.pow(1 + taxa, vezes);
+
+      const resultado = `
+        Valor Final: R$ ${montante.toFixed(2).replace('.', ',')}
+      `;
+
+      document.getElementById("resultado").textContent = resultado;
+    }
+  </script>
+</body>
+</html>
